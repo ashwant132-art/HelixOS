@@ -1,0 +1,7 @@
+[KDE Action Restrictions]
+editable=false
+action/edit_mode=false
+action/configure=false
+
+[General]
+AccentColor=0,240,255

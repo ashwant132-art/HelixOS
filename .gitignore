@@ -1,0 +1,22 @@
+# Build outputs — regenerated via scripts, never committed
+build/
+*.iso
+*.hybrid.iso
+*.img
+*.squashfs
+*.ext4
+*.deb
+bzImage
+vmlinuz-*
+initrd*
+# Secret key material — NEVER commit (public repo-key .asc is fine)
+*secret*
+*master-key*
+*.gpg
+secring.*
+# Editor/OS junk
+.DS_Store
+Thumbs.db
+*~
+*.swp
+.vscode/

@@ -1,0 +1,1 @@
+{"layer":"top","modules-left":["labwc/workspaces"],"modules-center":["clock"],"modules-right":["network","pulseaudio","tray"],"clock":{"format":"%a %H:%M"}}

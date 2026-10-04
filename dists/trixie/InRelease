@@ -1,0 +1,40 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Codename: trixie
+Date: Sun, 04 Oct 2026 11:30:33 +0000
+Label: HelixOS
+Origin: HelixOS
+Suite: testing
+MD5Sum:
+ ec2fb01fffa72fdef0826a69712735b6              101 Release
+ 67e744a056736a7d392eb222cb555b39              703 main/binary-amd64/Packages
+ 3182b0cec7ae092ec9981e30f825ffb0              508 main/binary-amd64/Packages.gz
+SHA1:
+ ceea78bebc019a3f34a27a8481346d8efa6b208a              101 Release
+ c4eca5275715602dffc1eb6bec6cc8d26dda28b9              703 main/binary-amd64/Packages
+ 2f8acc351090fb5474a19b90c4f016faf4a8439b              508 main/binary-amd64/Packages.gz
+SHA256:
+ b3c064c61e57dd76e1c2428281e7912c786fb9f944b14bc0131d1f50b6f38025              101 Release
+ bcfe56f368f58ccb8bfac9a421b1725997b5a89cc1dc1b2ea85b20944ff017ec              703 main/binary-amd64/Packages
+ 2705418f38fd8407b3b4df7ebd104a536bd76ae8176092e3515069b7212e7a89              508 main/binary-amd64/Packages.gz
+SHA512:
+ 03ea94da0f034354aa2e44318c25086a8bdd9e615f3c9f63f7c3c8f920e571254624860c6f8e52709e4ef104ceeab0a6373fcbf752c2437cba370cf8e302ba7e              101 Release
+ 9b50a028fb89af827f9009d54ffcb20a5c32daa12795902358355a59e1f3ee78859752c059fe96c06ee9ef94506268b46d4699528286eac0aaefe24c695b0596              703 main/binary-amd64/Packages
+ c6deda44019e97f5e4197e7f94a81324c575fcc21b1a48e5db8a7a973a94f2a20ecbc6c4f4b45ba9621586eb2ff1cf9c2eafdcbdd0495c660f93bccede6b6b83              508 main/binary-amd64/Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXFjm18mw6VwlPnTLgcxeebYsqLoFAmrCONoACgkQgcxeebYs
+qLoD+w//VO4ABhV7m0OopMZczuWNcSTFZXOlLkW4RiWNCO/o0FExKE8CeejhAZye
+3EYJJIfrkM+gG4d0FMxakXVkq4eqKbznnZLnXvIJOdV30mzYvv7y3x2sd1KOZGkU
+IVMsJXFkLPkUIsQedoyRQ9NPUkS/KM5YXw8K+VDa/zpWfvdyxNHUa/nKtI27+Xtd
+RxZm7RwFvaDfchwV2Eo3+CY2V/iQ179bjD9tzTflXFwvgJF/iwI9Bd5H+dXItM7p
+SpNkAClB+NhF8HVIcngLuuDIoyrR7kKfHbvbmAgobirnXdiqRYE0z+vbUvn3qUmS
+a5tgIr95uzlqYCg4oj3oAy+VsfbkCFYl08FR/yUq/4U0daxnmwGPvsgzlChz4xln
+7qqRTRHOOuP4SZxjVKB0Nulg8Cm7VEPlOfcZmfdhI6RSs4WJXd8xkM1PCSebipuE
+4ffbSZN9w1BiAOsXSvnKOLRkIM8Scwm9vGzwn+BlZp2O4Q2BydEhNx9yxzASbkhE
+WCzl5GChQ6FoLJfz+bYjcma8MN5M4ySWcwwttd1lVYWlqeWto4bS15owWD7WMRtN
+o+3kWScRZ1NDqD0+c4bpe3CYMhaRyuUTIxa/w9pUga9kjvUKUQTNM/DxgDNRtLu3
+w1w4bqJpMqxio/Xga//Az+vQLaiaMhBEX1n6lTOEoasZD1bWgRY=
+=EmPX
+-----END PGP SIGNATURE-----

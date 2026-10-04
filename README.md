@@ -15,7 +15,7 @@ Daily-driver and installer testing is in progress — expect rough edges.
    ./scripts/setup-wsl.sh
    ./scripts/make-iso.sh
    ```
-2. Flash `helixos-live.iso` with Rufus (DD mode), Secure Boot off for now.
+2. Flash `helixos-live.iso` with Rufus, Secure Boot off for now.
 3. Boot the USB, pick Try HelixOS. Live user `helix`, no password.
 4. Double-click Install HelixOS for the guided setup (language,
    timezone, keyboard, user + password). preferably on a spare disk.
@@ -43,6 +43,3 @@ Boot the live USB, fill the hardware sheet in Issues, paste failures
 with photos of the screen. Docs, translations, and packaging help
 welcome. Be kind, paste logs.
 
-## License
-
-To be announced.

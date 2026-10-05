@@ -103,6 +103,7 @@ calamares
 calamares-settings-debian
 refind
 os-prober
+efibootmgr
 PKGS
 
 # base identity (no logos, no wallpapers, no custom themes)
@@ -122,71 +123,84 @@ if [ -f "$ROOT/helixos-repo-pub.asc" ]; then
   echo "OTA repo client wired."
 fi
 printf '[Theme]\nCurrent=breeze\n' > config/includes.chroot/etc/sddm.conf.d/helixos.conf
-# Install-to-disk desktop icon for the live session (stock icon, no branding)
-mkdir -p config/includes.chroot/etc/skel/Desktop config/includes.chroot/usr/share/applications
+# Install-to-disk desktop icon for the live session (HelixOS installer identity)
+mkdir -p config/includes.chroot/etc/skel/Desktop config/includes.chroot/usr/share/applications \
+  config/includes.chroot/usr/share/pixmaps
 cat > config/includes.chroot/usr/share/applications/helixos-install.desktop <<'DESK'
 [Desktop Entry]
 Name=Install HelixOS
 Comment=Guided setup: language, timezone, keyboard, user and password
-Exec=pkexec calamares
-Icon=system-software-install
+Exec=pkexec calamares -b helixos
+Icon=helixos-logo
 Terminal=false
 Type=Application
 Categories=System;
 DESK
 cp config/includes.chroot/usr/share/applications/helixos-install.desktop config/includes.chroot/etc/skel/Desktop/
+cp "$SHELLCONF/helixos-logo.png" config/includes.chroot/usr/share/pixmaps/helixos-logo.png
+# Calamares HelixOS branding (selected via calamares -b helixos, no system files patched)
+mkdir -p config/includes.chroot/etc/calamares/branding/helixos
+cp "$ROOT/configs/calamares/helixos/branding.desc" config/includes.chroot/etc/calamares/branding/helixos/
+cp "$SHELLCONF/helixos-logo.png" config/includes.chroot/etc/calamares/branding/helixos/helixos-logo.png
+# Dual-boot engine: rEFInd auto-installer (live-side script) + Calamares job config.
+# The setup's partitioning step picks the partition (alongside/manual incl. Windows
+# shrink); this job then drops rEFInd into the installed ESP automatically.
+mkdir -p config/includes.chroot/usr/bin
+cp "$ROOT/configs/calamares/helixos-refind-install.sh" config/includes.chroot/usr/bin/helixos-refind-install
+chmod +x config/includes.chroot/usr/bin/helixos-refind-install
+mkdir -p config/includes.chroot/etc/calamares/modules
+cat > config/includes.chroot/etc/calamares/modules/shellprocess_helix-refind.conf <<'YML'
+---
+dontChroot: true
+timeout: 300
+script:
+    - command: /usr/bin/helixos-refind-install
+YML
 # HelixOS GRUB menu (UEFI, 10s timeout) — binary includes land after the
 # generated grub stages, so ours wins. EFI-embedded stub chainloads /boot/grub.
 # (No theme: plain GRUB menu until new artwork lands.)
 mkdir -p config/includes.binary/boot/grub
 cp "$ROOT/configs/grub/grub.cfg" config/includes.binary/boot/grub/grub.cfg
-# Plymouth v2: Helix logo up top, spinner circle middle, HelixOS wordmark bottom.
-# (No wallpaper per your call — void black behind.)
-mkdir -p config/includes.chroot/usr/share/plymouth/themes/helixos
-convert "$SHELLCONF/helixos-logo.png" -resize 256x256 config/includes.chroot/usr/share/plymouth/themes/helixos/logo-boot.png
-cat > config/includes.chroot/usr/share/plymouth/themes/helixos/helixos.plymouth <<'PLYM'
-[Plymouth Theme]
-Name=HelixOS
-Description=HelixOS boot splash: logo, spinner, wordmark
-ModuleName=script
-[script]
-ImageDir=/usr/share/plymouth/themes/helixos
-ScriptFile=/usr/share/plymouth/themes/helixos/helixos.script
-PLYM
-cat > config/includes.chroot/usr/share/plymouth/themes/helixos/helixos.script <<'SCRIPT'
-# HelixOS Plymouth v2: logo (top) -> spinner ring (middle) -> wordmark (bottom)
-logo = Image("logo-boot.png");
-screen_w = Window.GetWidth(); screen_h = Window.GetHeight();
-lw = logo.GetWidth(); lh = logo.GetHeight();
-logo_sprite = Sprite(logo);
-logo_sprite.SetPosition(screen_w / 2 - lw / 2, screen_h * 0.26 - lh / 2, 100);
-label = Image.Text("HelixOS", 1, 1, 1, "Sans 32");
-label_sprite = Sprite(label);
-label_sprite.SetPosition(screen_w / 2 - label.GetWidth() / 2, screen_h * 0.72, 100);
-spinner = Image("logo-boot.png");
-fun progress (duration, progress) {
-  if (progress > 1) progress = 1;
-  for (i = 0; i < 12; i++) {
-    angle = 2 * Math.Pi * i / 12 - progress * 2 * Math.Pi * 2;
-    x = screen_w / 2 + Math.Cos(angle) * 46 - 7;
-    y = screen_h * 0.52 + Math.Sin(angle) * 46 - 7;
-    a = 0.25 + 0.75 * ((Math.Sin(angle * 3 + progress * 12) + 1) / 2);
-    dot = Image.New(14, 14, 0, 0.94, 1);
-    s = Sprite(dot);
-    s.SetOpacity(a);
-    s.SetPosition(x, y, 100);
-    s.SetClip(0, 0, 14, 14);
-  }
-}
-Plymouth.SetBootProgressFunction(progress);
-SCRIPT
+# NOTE: Plymouth theme intentionally NOT shipped (boot splash stays stock).
 # hooks live FLAT in config/hooks/ (live-build ignores subdirectories)
 mkdir -p config/hooks
-cat > config/hooks/0099-helixos-plymouth.hook.chroot <<'HOOK'
+# Plymouth default reset: earlier builds set helixos theme inside the persistent
+# chroot — that setting survives file purges, so point it back at stock explicitly.
+cat > config/hooks/0099-helixos-plymouth-reset.hook.chroot <<'HOOK'
 #!/bin/sh
-plymouth-set-default-theme helixos || true
+plymouth-set-default-theme spinner 2>/dev/null || plymouth-set-default-theme text 2>/dev/null || true
 HOOK
-chmod +x config/hooks/0099-helixos-plymouth.hook.chroot
+chmod +x config/hooks/0099-helixos-plymouth-reset.hook.chroot
+# Setup sequencer patch: run the rEFInd dual-boot job right after the stock
+# bootloader step. Guarded six ways — any mismatch skips silently (stock setup).
+cat > config/hooks/0099-helixos-calamares-refind.hook.chroot <<'HOOK'
+#!/bin/sh
+python3 - <<'PYEOF' || true
+import shutil
+p = '/etc/calamares/settings.conf'
+job = '/etc/calamares/modules/shellprocess_helix-refind.conf'
+try:
+    src = open(p).read().splitlines(keepends=True)
+    have_job = False
+    try:
+        open(job).close()
+        have_job = True
+    except OSError:
+        have_job = False
+    hits = [i for i, l in enumerate(src) if l.strip() == '- bootloader']
+    if have_job and len(hits) == 1 and not any('helix-refind' in l for l in src):
+        shutil.copyfile(p, p + '.helixos-bak')
+        src.insert(hits[0] + 1, '    - shellprocess@helix-refind\n')
+        open(p, 'w').writelines(src)
+        print('helix-refind job sequenced after bootloader')
+    else:
+        print('helix-refind sequencing skipped (already present or layout differs)')
+except Exception as e:
+    print('helix-refind sequencing skipped:', e)
+PYEOF
+HOOK
+chmod +x config/hooks/0099-helixos-calamares-refind.hook.chroot
+# (No Plymouth enable hook: stock splash until new artwork lands.)
 # Live user helix: pre-created, EMPTY password, passwordless sudo.
 # (live-config reuses the existing account at boot instead of inventing one.)
 cat > config/hooks/0099-helixos-liveuser.hook.chroot <<'HOOK'

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<labwc_config>
+  <theme><name>Clearlooks</name></theme>
+  <keyboard><keybind key="A-t"><action name="Execute"><command>foot</command></action></keybind></keyboard>
+</labwc_config>

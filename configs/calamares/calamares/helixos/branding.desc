@@ -1,0 +1,20 @@
+---
+componentName:  helixos
+productName:    HelixOS
+version:        0.3
+shortVersion:   0.3
+versionedName:  HelixOS 0.3
+shortVersionedName: HelixOS
+bootloaderEntryName: HelixOS
+welcomeStyleCalamares: true
+welcomeExpandingLogo: true
+windowWidth:    800
+windowHeight:   520
+images:
+  productLogo:        "helixos-logo.png"
+  productIcon:        "helixos-logo.png"
+  productWelcome:     "helixos-logo.png"
+style:
+  sidebarBackground:  "#0b0e1a"
+  sidebarText:        "#e6f7ff"
+  sidebarTextSelect:  "#00f0ff"

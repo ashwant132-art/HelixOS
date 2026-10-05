@@ -1,0 +1,13 @@
+Source: helixos-base
+Section: admin
+Priority: optional
+Maintainer: HelixOS <helixos@localhost>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.2
+
+Package: helixos-base
+Architecture: all
+Depends: ${misc:Depends}
+Description: HelixOS 1.0 Surge base identity files
+ Release file, defaults and version plumbing for HelixOS.
+ Future updates ship as new versions of this package (OTA via apt).

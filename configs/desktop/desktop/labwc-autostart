@@ -1,5 +1,0 @@
-# HelixOS Labwc autostart
-waybar &
-foot --server &
-swaybg -i /usr/share/backgrounds/helixos-wallpaper.svg -m fill &
-/usr/libexec/xdg-desktop-portal-wlr &

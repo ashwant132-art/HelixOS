@@ -1,6 +1,0 @@
-helixos-base (1.0-1) trixie; urgency=medium
-
-  * HelixOS 1.0 "Surge" base identity: release file and defaults.
-  * OTA channel: future system updates ship as new versions.
-
- -- HelixOS <helixos@localhost>  Sat, 04 Oct 2026 00:00:00 +0000

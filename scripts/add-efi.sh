@@ -38,6 +38,8 @@ if [ -d "$CHROOT/etc" ]; then
   APTLOG="$WORK/chroot-apt.log"
   sudo chroot "$CHROOT" apt-get update > "$APTLOG" 2>&1 || { echo "--- chroot apt update failed ---"; tail -n 8 "$APTLOG"; }
   (cd "$SIGDIR" && sudo chroot "$CHROOT" apt-get download shim-signed grub-efi-amd64-signed >> "$APTLOG" 2>&1) || { echo "--- chroot download failed ---"; tail -n 8 "$APTLOG"; }
+  # One-shot source must not ride into the image (it duplicates sources.list -> apt warnings)
+  sudo rm -f "$CHROOT/etc/apt/sources.list.d/helixos-efi.list" "$CHROOT/etc/apt/sources.list.d/helixos-efi.sources" 2>/dev/null || true
   sudo umount -R "$CHROOT/proc" 2>/dev/null || true
   sudo umount -R "$CHROOT/sys" 2>/dev/null || true
   sudo umount -R "$CHROOT/dev" 2>/dev/null || true

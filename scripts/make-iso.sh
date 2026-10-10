@@ -53,7 +53,7 @@ lb config \
   --iso-volume HelixOS \
   --source false \
   --win32-loader false \
-  --bootappend-live "boot=live components username=helix quiet splash"
+  --bootappend-live "boot=live components username=helix quiet"
 
 # HelixOS package set: full desktop — settings, panel/taskbar, kickoff start menu,
 # system tray, konsole terminal, systemmonitor task manager, discover store, plymouth boot splash
@@ -154,7 +154,7 @@ cat > config/includes.chroot/etc/calamares/modules/shellprocess_helix-refind.con
 dontChroot: true
 timeout: 300
 script:
-    - command: /usr/bin/helixos-refind-install
+    - command: ["/usr/bin/helixos-refind-install"]
 YML
 # HelixOS GRUB menu (UEFI, 10s timeout) — binary includes land after the
 # generated grub stages, so ours wins. EFI-embedded stub chainloads /boot/grub.
@@ -245,7 +245,7 @@ menuentry "HelixOS Live" {
   volume HelixOS
   loader /live/vmlinuz
   initrd /live/initrd.img
-  options "boot=live config username=helix quiet splash"
+  options "boot=live config username=helix quiet"
 }
 CONF
 HOOK
@@ -315,7 +315,9 @@ sudo rm -rf chroot/usr/share/backgrounds/helixos-wallpaper.svg \
   chroot/etc/calamares/branding/helixos \
   chroot/etc/skel/.config/autostart/helixos-wallpaper.desktop \
   chroot/etc/skel/Desktop/helixos-install.desktop \
-  chroot/usr/share/pixmaps/helixos-logo.png 2>/dev/null || true
+  chroot/usr/share/pixmaps/helixos-logo.png \
+  chroot/etc/apt/sources.list.d/helixos-efi.list \
+  chroot/etc/apt/sources.list.d/helixos-efi.sources 2>/dev/null || true
 # Stale chroot mounts from killed runs abort the next build — drop them first
 # (lazy fallback detaches even busy ones)
 for _m in chroot/proc chroot/sys chroot/dev/pts chroot/selinux; do
